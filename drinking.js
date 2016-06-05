@@ -11,12 +11,12 @@ function toNum(string) {
 function refined(students) {
   return students.map(function(student) {
     return {
-      "age": toNum(student.age),
-      "famsize": binary(student.famsize == "GT3"),
-      "internet": binary(student.internet),
-      "activities": binary(student.activities),
-      "sex": binary(student.sex == "M"),
-      "walc": binary(student.Walc == '4' || student.Walc == '5')
+      'age': toNum(student.age),
+      'famsize': binary(student.famsize == 'GT3'),
+      'internet': binary(student.internet),
+      'activities': binary(student.activities),
+      'sex': binary(student.sex == 'M'),
+      'walc': binary(student.Walc == '4' || student.Walc == '5')
     };
   });
 }
@@ -42,14 +42,19 @@ function studentToExample(x, y) {
   };
 }
 
-var examples = students.map(studentToExample("internet", "walc"));
+var examples = students.map(studentToExample('internet', 'walc'));
 
-function allBinaryProbs(students) {
-  students.map(function(student) {
-    student.sex = cvtWithSex(student)
+function allProbs(students) {
+  var yKey = 'walc';
+  var keys = Object.keys(students[0]).filter(function (key) { return key != yKey; } );
+
+  var obj = {};
+  keys.forEach(function(key) {
+    var examples = students.map(studentToExample(key, yKey));
+    obj[key] = probWith(examples, 2);
   });
+  return obj;
 }
-
 
 function probWith(examples, valRange) {
   var probs = new Array(valRange);
@@ -59,4 +64,4 @@ function probWith(examples, valRange) {
   return probs;
 }
 
-console.log('internet: ', probWith(examples, 2));
+console.log(allProbs(students));
