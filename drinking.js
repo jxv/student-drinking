@@ -12,11 +12,13 @@ function refined(students) {
   return students.map(function(student) {
     return {
       'age': toNum(student.age),
-      'famsize': binary(student.famsize == 'GT3'),
-      'internet': binary(student.internet),
-      'activities': binary(student.activities),
-      'sex': binary(student.sex == 'M'),
-      'walc': binary(student.Walc == '4' || student.Walc == '5')
+      'address': binary(student.address == 'U'), // Rural, Urban
+      'famsize': binary(student.famsize == 'GT3'), // Less than 3, Greater than 3
+      'internet': binary(student.internet), // No internet, internet
+      'activities': binary(student.activities), // No activities, activities
+      'sex': binary(student.sex == 'M'), // Female, Male
+      'parentStatus': binary(student.Pstatus == 'T'), // Living apart, Living together
+      'walc': binary(student.Walc == '4' || student.Walc == '5'), // 1-3, 4-5
     };
   });
 }
