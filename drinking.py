@@ -38,13 +38,10 @@ def main():
   print train[0]
 
 def value_matrix(raw, value_indices):
-  matrix = []
-  for item in raw['data']:
-    row = []
-    for idx in value_indices:
-      row.append(item['values'][idx])
-    matrix.append(row)
-  return matrix
+  return [
+    [ item['values'][idx] for idx in value_indices ]
+    for item in raw['data']
+  ]
 
 if __name__ == '__main__':
   main()
