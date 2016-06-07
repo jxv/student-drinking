@@ -26,12 +26,13 @@ def cat_to_num(row):
 
 def main():
   raw = load_json_file('./students.json')
-  # 2 sex
-  # 4 address
-  # 5 family size
-  # 6 parent status
-  # 28 weekend alcohol (Y value)
-  value_indices = [1, 3, 4, 5, 27]
+  value_indices = [
+    1, # sex (M, F)
+    3, # address (R, U)
+    4, # family size (LT3, GT3)
+    5, # parent status (A, T)
+    27 # weekend alcohol (1-3, 4-5) (Y value)
+  ]
   cat_values = value_matrix(raw, value_indices)
   num_values = map(cat_to_num, cat_values)
   train, test = split_train_test(num_values, .7)
