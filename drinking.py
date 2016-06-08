@@ -9,10 +9,10 @@ def load_json_file(file_path):
   f = open(file_path)
   return json.load(f)
 
-# def svm_train(X_test, y_test):
-#     classification = svm.SVC()
-#     classification.fit(X_test,y_test)
-#     return classification
+def svm_train(X_test, y_test):
+    classification = svm.SVC()
+    classification.fit(X_test,y_test)
+    return classification
 
 def split_train_test(data, train_percent):
     m = len(data)
@@ -20,6 +20,16 @@ def split_train_test(data, train_percent):
     training = data[0:num_to_select]
     test = data[num_to_select:m]
     return training, test
+
+#accuracy = correct predictions/total data points
+def get_accuracy(predicted, actual):
+    num_data_points = len(predicted)
+    compare = zip(predicted, actual)
+    num_correct = 0
+    for predicted, actual in compare:
+        num_correct = num_correct + (1 if predicted == actual else 0)
+    return (float(num_correct)/float(num_data_points))
+
 
 def cat_to_num(mapper, row):
   mapper_rows = zip(mapper, row)
@@ -42,8 +52,12 @@ def main():
   num_values = map(partial(cat_to_num, value_mapper), cat_values)
   train, test = split_train_test(num_values, .7)
   X_train, y_train = split_x_y(train)
-  print X_train[0]
-  print y_train[0]
+  X_test, y_test = split_x_y(test)
+  classification = svm_train(X_train, y_train)
+  predicted_y = classification.predict(X_test)
+  accuracy = get_accuracy(predicted_y, y_test)
+  print str(accuracy)
+
 
 
 #[[Int]] -> ([[Int]], [Int])
