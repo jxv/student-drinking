@@ -1,12 +1,18 @@
 import numpy
 import json
 import random
+from sklearn import svm
 from collections import namedtuple
 from functools import partial
 
 def load_json_file(file_path):
   f = open(file_path)
   return json.load(f)
+
+# def svm_train(X_test, y_test):
+#     classification = svm.SVC()
+#     classification.fit(X_test,y_test)
+#     return classification
 
 def split_train_test(data, train_percent):
     m = len(data)
@@ -35,7 +41,22 @@ def main():
   cat_values = value_matrix(raw, value_indices)
   num_values = map(partial(cat_to_num, value_mapper), cat_values)
   train, test = split_train_test(num_values, .7)
-  print train[0]
+  X_train, y_train = split_x_y(train)
+  print X_train[0]
+  print y_train[0]
+
+
+#[[Int]] -> ([[Int]], [Int])
+def split_x_y(data):
+    X = []
+    y = []
+    y_index = len(data[0]) - 1
+    for row in data:
+        X.append(row[0:(y_index)])
+        y.append(row[y_index])
+    return X, y
+
+
 
 def value_matrix(raw, value_indices):
   return [
