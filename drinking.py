@@ -88,14 +88,12 @@ def predict(clf, X_train, y_train, X_test, y_test):
     return accuracy, f1
 
 def get_accuracy(predicted, actual):
-    """ (Count, Count) -> Percent """
+    """(Count, Count) -> Percent"""
     # accuracy = correct predictions/total data points
     num_data_points = len(predicted)
     compare = zip(predicted, actual)
-    num_correct = 0
-    for predicted, actual in compare:
-        num_correct = num_correct + (1 if predicted == actual else 0)
-    return (float(num_correct)/float(num_data_points))
+    num_correct = get_count(compare, lambda predict, actual: predict == actual)
+    return num_correct / float(num_data_points)
 
 def get_count(ys, predicate):
     """([(y_predict, y_test)], (y_predict, y_test) -> Bool) -> Count"""
@@ -136,16 +134,16 @@ def value_matrix(raw, value_indices):
 
 def precision(true_pos, false_pos):
     """ (Count, Count) -> Percent """
-    return float(true_pos) / float(true_pos + false_pos)
+    return true_pos / float(true_pos + false_pos)
 
 def recall(true_pos, false_neg):
     """ (Count, Count) -> Percent """
     all_actual_pos = float(true_pos + false_neg)
-    return float(true_pos) / all_actual_pos
+    return true_pos / all_actual_pos
 
 def f1_score_formula(precision, recall):
     """ (Percent, Percent) -> F1Score """
-    return float(2 * precision * recall) / float(precision + recall)
+    return (2 * precision * recall) / float(precision + recall)
 
 def f1_score(true_pos, false_pos, false_neg):
     """ (Count, Count, Count) -> F1Score """
