@@ -97,29 +97,21 @@ def get_accuracy(predicted, actual):
         num_correct = num_correct + (1 if predicted == actual else 0)
     return (float(num_correct)/float(num_data_points))
 
+def get_count(ys, predicate):
+    """([(y_predict, y_test)], (y_predict, y_test) -> Bool) -> Count"""
+    return reduce(lambda count, y: count + (1 if predicate(y[0], y[1]) else 0), ys, 0)
+
 def get_true_pos(ys):
-    """ ([(y_predict, y_test)] -> Count """
-    count = 0
-    for predict, test in ys:
-        if predict == 1 and test == 1:
-            count = count + 1
-    return count
+    """[(y_predict, y_test)] -> Count"""
+    return get_count(ys, lambda predict, test: predict == 1 and test == 1)
 
 def get_false_pos(ys):
-    """ ([(y_predict, y_test)] -> Count """
-    count = 0
-    for predict, test in ys:
-        if predict == 1 and test == 0:
-            count = count + 1
-    return count
+    """[(y_predict, y_test)] -> Count"""
+    return get_count(ys, lambda predict, test: predict == 1 and test == 0)
 
 def get_false_neg(ys):
-    """ ([(y_predict, y_test)] -> Count """
-    count = 0
-    for predict, test in ys:
-        if predict == 0 and test == 1:
-            count = count + 1
-    return count
+    """[(y_predict, y_test)] -> Count"""
+    return get_count(ys, lambda predict, test: predict == 0 and test == 1)
 
 def split_x_y(data):
     """
