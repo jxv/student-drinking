@@ -3,7 +3,12 @@ import pandas
 import numpy as np
 import csv
 from sklearn import cross_validation
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.svm import SVC
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 
 def unstringer(s):
     return np.int64(s.split('"')[1])
@@ -15,6 +20,8 @@ def klass(xs):
                 return np.int64(i)
         raise ValueError('cannot find value \'' + x + '\' in list')
     return go
+
+# from sklearn.neighbors import KNeighborsClassifier
 
 def get_df():
     c = {
@@ -49,9 +56,19 @@ def main():
     num_instances = len(X)
     seed = 7
     kfold = cross_validation.KFold(n=num_instances, n_folds=num_folds, random_state=seed)
-    model = SVC()
-    results = cross_validation.cross_val_score(model, X, Y, cv=kfold)
-    print(results.mean())
+
+    models = [
+        ('SVC', SVC()),
+        ('KNeighborsClassifier', KNeighborsClassifier()),
+        ('LinearDiscriminantAnalysis', LinearDiscriminantAnalysis()),
+        ('LogisticRegression', LogisticRegression()),
+        ('GaussianNB', GaussianNB()),
+        ('DecisionTreeClassifier', DecisionTreeClassifier())
+    ]
+
+    for (name, model) in models:
+        results = cross_validation.cross_val_score(model, X, Y, cv=kfold)
+        print name + ':', results.mean()
 
 if __name__ == '__main__':
     main()
