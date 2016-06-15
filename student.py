@@ -44,6 +44,8 @@ def get_df():
         'romantic': klass(['no','yes']),
         'G1': unstringer,
         'G2': unstringer,
+        'Dalc': lambda x: np.int64(1 if x == '4' or x == '5' else 0),
+        'Walc': lambda x: np.int64(1 if x == '4' or x == '5' else 0),
     }
     return pandas.read_csv('student.csv', delimiter=';', quoting=csv.QUOTE_NONE, converters=c)
 
