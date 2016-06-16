@@ -49,11 +49,18 @@ def get_df():
     }
     return pandas.read_csv('student.csv', delimiter=';', quoting=csv.QUOTE_NONE, converters=c)
 
+def split_data(arr):
+    n = len(arr[0])
+    nx = n - 2
+    ny = n - 1
+    X = arr[:,0:nx]
+    Y = arr[:,ny]
+    return X, Y
+
 def main():
-    dataframe = get_df()
-    array = dataframe.values
-    X = array[:,0:31]
-    Y = array[:,32]
+    cols = ['sex','address','famsize','Pstatus','Dalc','Walc']
+    dataframe = get_df()[cols]
+    X, Y = split_data(dataframe.values)
     num_folds = 10
     num_instances = len(X)
     seed = 7
@@ -70,7 +77,7 @@ def main():
 
     for (name, model) in models:
         results = cross_validation.cross_val_score(model, X, Y, cv=kfold)
-        print name + ':', results.mean()
+        print(name + ': %.3f%%') % (results.mean() * 100.0)
 
 if __name__ == '__main__':
     main()
