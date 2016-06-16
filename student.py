@@ -9,6 +9,7 @@ from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report
 
 def unstringer(s):
     return np.int64(s.split('"')[1])
@@ -61,6 +62,7 @@ def main():
     cols = ['sex','address','famsize','Pstatus','Dalc','Walc']
     dataframe = get_df()[cols]
     X, Y = split_data(dataframe.values)
+    X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(X, Y, test_size=0.33, random_state=7)
     num_folds = 10
     num_instances = len(X)
     seed = 7
@@ -75,9 +77,14 @@ def main():
         ('DecisionTreeClassifier', DecisionTreeClassifier())
     ]
 
-    for (name, model) in models:
+    for name, model in models:
         results = cross_validation.cross_val_score(model, X, Y, cv=kfold)
-        print(name + ': %.3f%%') % (results.mean() * 100.0)
+        print name
+        print 'accuracy: %.3f%%' % (results.mean() * 100.0)
+        model.fit(X_train, Y_train)
+        predicted = model.predict(X_test)
+        report = classification_report(Y_test, predicted)
+        print report
 
 if __name__ == '__main__':
     main()
